@@ -42,12 +42,12 @@ adminSchema.methods.comparePassword = async function (candidatePassword) {
 };
 
 adminSchema.methods.generateAccessToken = function () {
-    return jwt.sign({ id: this._id }, process.env.ACCESS_TOKEN, {
+    return jwt.sign({ id: this._id }, process.env.ACCESS_TOKEN_SECRET, {
         expiresIn: 60 * 60, // 1 hour
     });
 }
 adminSchema.methods.generateRefreshToken = function () {
-    return jwt.sign({ id: this._id }, process.env.REFRESH_TOKEN, {
+    return jwt.sign({ id: this._id }, process.env.REFRESH_TOKEN_SECRET, {
         expiresIn: 60 * 60 * 24 * 30, // 30 days
     });
 }

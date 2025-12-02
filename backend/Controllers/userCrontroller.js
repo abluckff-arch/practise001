@@ -2,6 +2,7 @@ import { asyncHandler } from "../Utils/asyncHandler.js";
 import ApiResponse from "../Utils/ApiResponse.js";
 import apiError from "../Utils/apiError.js";
 import { Admin } from "../Models/adminmodel.js";
+import jwt from "jsonwebtoken";
 
 const generatetokens = async (user) => {
   try {
@@ -62,7 +63,7 @@ const adminLogin = asyncHandler(async (req, res) => {
         throw new apiError(401, "Invalid username or password");
     }
 
-    const{accessToken,refreshToken}= await generatetokens(admin);
+    const {accessToken,refreshToken} = await generatetokens(admin);
 
     const loggedInAdmin = admin.toObject();
     delete loggedInAdmin.password;
@@ -86,15 +87,15 @@ const adminLogin = asyncHandler(async (req, res) => {
 });
 const adminLogout = asyncHandler(async (req, res) => {
     // logout for admin
-    const option={
+    const options={
         httpOnly:true,
         sameSite:"strict",
         secure:true,
     }
 
     return res.status(200)
-    .clearCookie("refreshToken",option)
-    .clearCookie("accessToken",option)
+    .clearCookie("refreshToken",options)
+    .clearCookie("accessToken",options)
     .json(
         new ApiResponse(200,"Admin logged out successfully",null)
     );
@@ -103,4 +104,32 @@ const adminLogout = asyncHandler(async (req, res) => {
 )
 
 
-export { adminLogin, adminregister, adminLogout};
+const refreshaccesstoken = asyncHandler(async (req, res) => {
+    const incomingrefreshToken = req.cookies?.refreshToken || req.header("Authorization")?.replace("Bearer ", "");
+    if (!incomingrefreshToken) {
+        throw new apiError(401, "Unauthorized request");
+    }
+    const decoded = jwt.verify(incomingrefreshToken, process.env.REFRESH_TOKEN_SECRET);
+    const user = await Admin.findById(decoded.id);
+
+    if (!user) {
+        throw new apiError(401, "Invalid Refresh Token");
+    }
+    if (user.refreshToken !== incomingrefreshToken) {
+        throw new apiError(401, "Refresh token is expired or used!");
+    }
+    const { accessToken, refreshToken: newRefreshToken } = await generatetokens(user);
+
+    const options = {
+        httpOnly: true,
+        secure: true,
+        sameSite: "strict"
+    };
+    return res
+        .status(200)
+        .cookie("accessToken", accessToken, options)
+        .cookie("refreshToken", newRefreshToken, options)
+        .json(new ApiResponse(200, "Access token refreshed successfully", { accessToken, refreshToken: newRefreshToken }));
+});
+
+export { adminLogin, adminregister, adminLogout, refreshaccesstoken };
