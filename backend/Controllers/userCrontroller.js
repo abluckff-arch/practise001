@@ -3,18 +3,19 @@ import ApiResponse from "../Utils/ApiResponse.js";
 import apiError from "../Utils/apiError.js";
 import { Admin } from "../Models/adminmodel.js";
 import jwt from "jsonwebtoken";
+import { uploadImage } from "../Utils/cloudinaryupload.js";
 
 const generatetokens = async (adminId) => {
-  const user = await Admin.findById(adminId);
-  if (!user) {
-    throw new apiError(404, "User not found");
-  }
-  const accessToken = user.generateAccessToken();
-  const refreshToken = user.generateRefreshToken();
+    const user = await Admin.findById(adminId);
+    if (!user) {
+        throw new apiError(404, "User not found");
+    }
+    const accessToken = user.generateAccessToken();
+    const refreshToken = user.generateRefreshToken();
 
-  user.refreshToken = refreshToken;
-  await user.save({ validateBeforeSave: false });
-  return { accessToken, refreshToken };
+    user.refreshToken = refreshToken;
+    await user.save({ validateBeforeSave: false });
+    return { accessToken, refreshToken };
 };
 
 const adminregister = asyncHandler(async (req, res) => {
@@ -35,11 +36,7 @@ const adminregister = asyncHandler(async (req, res) => {
         username,
         password,
     });
-
-    // Convert the mongoose document to a plain object to manipulate it
-    const createdAdmin = admin1.toObject();
-    delete createdAdmin.password;
-    delete createdAdmin.refreshToken;
+    const createdAdmin = await Admin.findById(admin1._id).select("-password -refreshToken");
 
     return res
         .status(201)
@@ -50,11 +47,11 @@ const adminLogin = asyncHandler(async (req, res) => {
     // login for admin
     const { username, password } = req.body;
 
-      if (!username) {
+    if (!username) {
         throw new apiError(400, "Username is required");
     }
-    const admincheck= await Admin.findOne({username});
-    if(!admincheck){
+    const admincheck = await Admin.findOne({ username });
+    if (!admincheck) {
         throw new apiError(401, "Invalid username or password");
     }
     const isPasswordValid = await admincheck.comparePassword(password);
@@ -63,8 +60,8 @@ const adminLogin = asyncHandler(async (req, res) => {
         throw new apiError(401, "Invalid username or password");
     }
 
-    const {accessToken,refreshToken} = await generatetokens(admincheck._id);
-    const okuser= await Admin.findById(admincheck._id).select("-password -refreshToken");
+    const { accessToken, refreshToken } = await generatetokens(admincheck._id);
+    const okuser = await Admin.findById(admincheck._id).select("-password -refreshToken");
 
     const options = {
         httpOnly: true,
@@ -87,7 +84,7 @@ const adminLogin = asyncHandler(async (req, res) => {
 
 // admin section for logout
 const adminLogout = asyncHandler(async (req, res) => {
-   await Admin.findByIdAndUpdate(
+    await Admin.findByIdAndUpdate(
         req.user._id,
         { $set: { accessToken: undefined, refreshToken: undefined } },
         { new: true }
@@ -133,4 +130,44 @@ const refreshaccesstoken = asyncHandler(async (req, res) => {
         .json(new ApiResponse(200, "Access token refreshed successfully", { accessToken, refreshToken: newRefreshToken }));
 });
 
-export { adminLogin, adminregister, adminLogout, refreshaccesstoken };
+const adminChangepassword = asyncHandler(async (req, res) => {
+    const { oldpassword, newpassword } = req.body;
+    const user = await Admin.findById(req.user._id);
+    const isPasswordValid = await user.comparePassword(oldpassword);
+    if (!isPasswordValid) {
+        throw new apiError(401, "Invalid old password");
+    }
+    user.password = newpassword;
+    await user.save({ validateBeforeSave: false });
+    return res.status(200).json(new ApiResponse(200, "Password changed successfully"));
+});
+
+
+
+//admin upload sections 
+const adminupload = asyncHandler(async (req, res) => {
+    const { title, description, price } = req.body;
+
+    if ([title, description, price].some((field) => !field || field.trim() === "")) {
+        throw new apiError(400, "All fields are required");
+
+    }
+
+    if (!req.files || !req.files.images || req.files.images.length === 0) {
+        throw new apiError(400, "Image is required");
+    }
+
+    const uploadedImages = await Promise.all(
+        req.files.images.map((file) => uploadImage(file.path))       if (uploadedImages.some(image => !image)) {
+            throw new apiError(500, "Failed to upload one or more images to Cloudinary");
+        }
+
+    const adminuploads = await FlashSale.create({
+        title,
+        description,
+        price, images: uploadedImages.map((img) => ({ url: img.secure_url, public_id: img.public_id, })),
+    });
+    return res.status(201).json(new ApiResponse(201, "Flash Sale created successfully", adminuploads));
+});
+
+export { adminLogin, adminChangepassword, adminregister, adminLogout, refreshaccesstoken };
