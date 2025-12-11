@@ -1,4 +1,0 @@
-- [x] Add import for jwt from "jsonwebtoken"
-- [x] Fix destructuring syntax in adminLogin function
-- [x] Rename 'option' to 'options' in adminLogout function
-- [x] Change 'decoded?._id' to 'decoded.id' in refreshaccesstoken function
