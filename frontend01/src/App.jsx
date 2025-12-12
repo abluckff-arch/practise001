@@ -4,6 +4,7 @@ import About from "./pages/About";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import YearlyPackages from "./pages/OurPackages";
+import SubscriptionPackages from "./pages/TvPackages";
 
 function App() {
   return (
@@ -14,6 +15,7 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/ourpackages" element={<YearlyPackages />} />
+        <Route path="/subscription" element={<SubscriptionPackages/>}/>
       </Routes>
     </BrowserRouter>
   );

@@ -62,7 +62,7 @@ export default function Packages() {
                   alt={plan.speed}
                   className="w-full h-full object-cover"
                 />
-                <div className="absolute bottom-0 left-0 w-full h-20 bg-gradient-to-t from-white/80 to-white/0"></div>
+                <div className="absolute bottom-0 left-0 w-full h-20  from-white/80 to-white/0"></div>
               </div>
 
               <div className="p-6 flex flex-col flex-1">
