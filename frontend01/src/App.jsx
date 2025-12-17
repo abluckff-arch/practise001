@@ -7,6 +7,7 @@ import YearlyPackages from "./pages/OurPackages";
 import SubscriptionPackages from "./pages/TvPackages";
 import Details from "./pages/Details";
 import AdminDashboard from "../srcadmin/PagesAdmin/DashBoard";
+import ThankYou from "./pages/ThankYou";
 function App() {
   return (
     <BrowserRouter>
@@ -19,6 +20,7 @@ function App() {
         <Route path="/subscription" element={<SubscriptionPackages/>}/>
         <Route path="order" element={<Details />} />
         <Route path="Dashboard" element={<AdminDashboard />} />
+        <Route path="/thankyou" element={<ThankYou />} /> 
 
       </Routes>
     </BrowserRouter>

@@ -58,11 +58,12 @@ const OrderForm = () => {
         formData,
       });
 
-      toast.success("Internet connection request submitted!");
+      toast.success("Request submitted successfully!");
       setLoading(false);
-      navigate("/orders");
+      navigate("/thank-you");
     }, 1000);
   };
+
 
   const resolveImageUrl = (item) =>
     item?.image ||
