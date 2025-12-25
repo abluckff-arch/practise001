@@ -61,12 +61,12 @@ const getAdmin = asyncHandler(async (req, res) => {
 
   return res
     .status(200)
-    .json(new ApiResponse(200, admin, "Admin fetched successfully"));
+    .json(new ApiResponse(200, "Admin fetched successfully", admin));
 });
 
 
 // Booking schema for order
-const Booking1 = asyncHandler(async (req, res) => {
+const createBooking = asyncHandler(async (req, res) => {
     try {
         const { plan, connectionType, fullName, phone, municipality, tole, paymentMethod } = req.body;
         // Validate required fields
@@ -90,7 +90,7 @@ const Booking1 = asyncHandler(async (req, res) => {
     }
 });
 
-const getBokings = asyncHandler(async (req, res) => {
+const getBookings = asyncHandler(async (req, res) => {
     try {
         const bookings = await Booking.find().sort({ createdAt: -1 });
         return res.status(200).json(new ApiResponse(200, "Bookings fetched successfully", bookings));
@@ -215,7 +215,7 @@ const adminLogout = asyncHandler(async (req, res) => {
         .status(200)
         .clearCookie("accessToken", options)
         .clearCookie("refreshToken", options)
-        .json(new ApiResponse(200, null, "User logged out successfully"));
+        .json(new ApiResponse(200, "User logged out successfully", null));
 });
 
 const refreshaccesstoken = asyncHandler(async (req, res) => {
@@ -302,4 +302,4 @@ const adminupload = asyncHandler(async (req, res) => {
 });
 
 
-export { adminLogin, adminupload,getAdmin, adminChangepassword, adminregister, adminLogout, refreshaccesstoken, getBokings, getBookingById, updateBooking, deleteBooking, Booking1 };
+export { adminLogin, adminupload,getAdmin, adminChangepassword, adminregister, adminLogout, refreshaccesstoken, getBookings, getBookingById, updateBooking, deleteBooking, createBooking };

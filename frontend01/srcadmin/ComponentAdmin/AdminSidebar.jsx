@@ -41,7 +41,10 @@ export default function AdminSidebar() {
       </div>
 
       {/* Admin Profile */}
-      <div className="flex items-center gap-3 p-4 border-b border-white/10">
+      <div 
+        onClick={() => navigate("/profile")}
+        className="flex items-center gap-3 p-4 border-b border-white/10 cursor-pointer hover:bg-white/5 transition-colors"
+      >
         <div className="w-10 h-10 rounded-full bg-gray-600 flex items-center justify-center">
           <User size={20} />
         </div>

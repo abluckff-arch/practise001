@@ -12,11 +12,13 @@ import Products from "../srcadmin/PagesAdmin/AdminProducts";
 import Customers from "../srcadmin/PagesAdmin/AdminCustomers";
 import Orders from "../srcadmin/PagesAdmin/AdminOrders";
 import Settings from "../srcadmin/PagesAdmin/AdminSetting";
+import Profile from "./pages/Profile";
 function App() {
   return (
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<Home />} />
+        <Route path="/profile" element={<Profile />} />
         <Route path="/about" element={<About />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />

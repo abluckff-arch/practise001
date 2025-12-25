@@ -18,7 +18,7 @@ function Login() {
 
             if (res.data.success) {
                 setMessage("Login successful! Redirecting...");
-                setTimeout(() => navigate("/"), 1500);
+                setTimeout(() => navigate("/dashboard"), 1500);
             }
         } catch (err) {
             setMessage(err.message || "Login failed");
