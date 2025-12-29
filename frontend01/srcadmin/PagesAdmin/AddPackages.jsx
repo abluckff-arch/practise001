@@ -9,6 +9,7 @@ const AddPackages = () => {
         title: "",
         description: "",
         price: "",
+        duration: "",
     });
 
     const [images, setImages] = useState([]);
@@ -25,7 +26,7 @@ const AddPackages = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        if (!formData.title || !formData.description || !formData.price) {
+        if (!formData.title || !formData.description || !formData.price || !formData.duration) {
             return toast.error((t) => (
                 <div className="flex items-center gap-2">
                     <span>All fields are required</span>
@@ -54,6 +55,7 @@ const AddPackages = () => {
             data.append("title", formData.title);
             data.append("description", formData.description);
             data.append("price", formData.price);
+            data.append("duration", formData.duration);
 
             images.forEach((img) => {
                 data.append("images", img);
@@ -98,6 +100,7 @@ const AddPackages = () => {
                 title: "",
                 description: "",
                 price: "",
+                duration: "",
             });
             setImages([]);
         } catch (error) {
@@ -138,6 +141,19 @@ const AddPackages = () => {
                         rows={4}
                         className="w-full border rounded-lg px-4 py-2"
                     />
+
+                    <div>
+                        <label className="block mb-2 font-medium">Duration</label>
+                        <input
+                            type="text"
+                            name="duration"
+                            placeholder="e.g. 1 Month, 3 Months, Yearly"
+                            required
+                            value={formData.duration}
+                            onChange={handleChange}
+                            className="w-full border rounded-lg px-4 py-2"
+                        />
+                    </div>
 
                     <input
                         type="number"

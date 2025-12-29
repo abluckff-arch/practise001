@@ -16,6 +16,12 @@ const uploadImagesSchema = new mongoose.Schema(
             type: Number,
             required: true,
         },
+        duration: {
+            type: String,
+            required: true,
+            enum: ["1 Month", "3 Months", "6 Months", "Yearly"],
+            default: "1 Month",
+        },
         images: [
             {
                 url: {
