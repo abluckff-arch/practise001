@@ -19,7 +19,10 @@ const uploadImagesSchema = new mongoose.Schema(
         duration: {
             type: String,
             required: true,
-            default: "1 month",
+        },
+        tvOptions: {
+            type: String,
+            required: true,
         },
         images: [
             {

@@ -260,10 +260,10 @@ const adminChangepassword = asyncHandler(async (req, res) => {
 
 //admin upload sections 
 const adminupload = asyncHandler(async (req, res) => {
-    const { title, description, price, duration } = req.body;
+    const { title, description, price, duration, tvOptions } = req.body;
 
     // Validate required fields
-    if ([title, description, price, duration].some((field) => !field || field.trim() === "")) {
+    if ([title, description, price, duration, tvOptions].some((field) => !field || field.trim() === "")) {
         throw new apiError(400, "All fields are required");
     }
 
@@ -290,6 +290,7 @@ const adminupload = asyncHandler(async (req, res) => {
         description,
         price,
         duration,
+        tvOptions,
         images: uploadedImages.map((img) => ({
             url: img.secure_url,
             public_id: img.public_id,
