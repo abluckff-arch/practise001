@@ -260,10 +260,10 @@ const adminChangepassword = asyncHandler(async (req, res) => {
 
 //admin upload sections 
 const adminupload = asyncHandler(async (req, res) => {
-    const { title, description, price } = req.body;
+    const { title, description, price, duration } = req.body;
 
     // Validate required fields
-    if ([title, description].some((field) => !field || field.trim() === "")) {
+    if ([title, description, price, duration].some((field) => !field || field.trim() === "")) {
         throw new apiError(400, "All fields are required");
     }
 
@@ -289,6 +289,7 @@ const adminupload = asyncHandler(async (req, res) => {
         title,
         description,
         price,
+        duration,
         images: uploadedImages.map((img) => ({
             url: img.secure_url,
             public_id: img.public_id,
@@ -301,5 +302,10 @@ const adminupload = asyncHandler(async (req, res) => {
         .json(new ApiResponse(201, "Package created successfully", createdPackage));
 });
 
+const getpackages= asyncHandler(async (req, res) => {
+    const packages = await UploadImages.find().sort({ createdAt: -1 });
+    return res.status(200).json(new ApiResponse(200, "Packages fetched successfully", packages));
+});
 
-export { adminLogin, adminupload,getAdmin, adminChangepassword, adminregister, adminLogout, refreshaccesstoken, getBookings, getBookingById, updateBooking, deleteBooking, createBooking };
+
+export { adminLogin,getpackages, adminupload,getAdmin, adminChangepassword, adminregister, adminLogout, refreshaccesstoken, getBookings, getBookingById, updateBooking, deleteBooking, createBooking };

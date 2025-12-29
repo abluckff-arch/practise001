@@ -1,36 +1,11 @@
 import { useEffect, useState } from "react";
 import { Plus, Pencil, Trash2 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 import AdminSidebar from "../ComponentAdmin/AdminSidebar";
 
-const packagesData = [
-  {
-    id: 1,
-    name: "Basic Plan",
-    duration: "1 Month",
-    speed: "50 Mbps",
-    price: 25,
-    status: "Active",
-  },
-  {
-    id: 2,
-    name: "Standard Plan",
-    duration: "6 Months",
-    speed: "100 Mbps",
-    price: 120,
-    status: "Active",
-  },
-  {
-    id: 3,
-    name: "Premium Plan",
-    duration: "1 Year",
-    speed: "200 Mbps",
-    price: 220,
-    status: "Inactive",
-  },
-];
-
 export default function InternetPackages() {
+  const [packages, setPackages] = useState([]);
   const [search, setSearch] = useState("");
   const [isOnline, setIsOnline] = useState(navigator.onLine);
   const navigate = useNavigate();
@@ -49,20 +24,24 @@ export default function InternetPackages() {
     };
   }, []);
 
-  const filteredPackages = packagesData.filter((pkg) =>
-    pkg.name.toLowerCase().includes(search.toLowerCase())
-  );
+  useEffect(() => {
+    const fetchPackages = async () => {
+      try {
+        const response = await axios.get("http://localhost:5000/api/v1/users/packages");
+        setPackages(response.data.data);
+      } catch (error) {
+        console.error("Error fetching packages:", error);
+      }
+    };
 
-  const statusStyle = (status) => {
-    switch (status) {
-      case "Active":
-        return "bg-green-100 text-green-700";
-      case "Inactive":
-        return "bg-gray-200 text-gray-600";
-      default:
-        return "bg-gray-100 text-gray-700";
+    if (isOnline) {
+      fetchPackages();
     }
-  };
+  }, [isOnline]);
+
+  const filteredPackages = packages.filter((pkg) =>
+    pkg.title.toLowerCase().includes(search.toLowerCase())
+  );
 
   return (
     <div className="flex min-h-screen bg-gray-50">
@@ -72,7 +51,7 @@ export default function InternetPackages() {
         {/* Offline Banner */}
         {!isOnline && (
           <div className="bg-red-100 border border-red-300 text-red-700 px-4 py-3 rounded-lg">
-            ⚠️ Offline mode — package management disabled
+           Offline mode — package management disabled
           </div>
         )}
 
@@ -119,32 +98,22 @@ export default function InternetPackages() {
           <table className="w-full text-sm">
             <thead className="bg-gray-100 text-gray-600 uppercase text-xs">
               <tr>
-                <th className="px-6 py-4 text-left">Package</th>
+                <th className="px-6 py-4 text-left">Title</th>
                 <th className="px-6 py-4 text-center">Duration</th>
-                <th className="px-6 py-4 text-center">Speed</th>
+                <th className="px-6 py-4 text-center">Description</th>
                 <th className="px-6 py-4 text-center">Price</th>
-                <th className="px-6 py-4 text-center">Status</th>
                 <th className="px-6 py-4 text-center">Actions</th>
               </tr>
             </thead>
 
             <tbody>
               {filteredPackages.map((pkg) => (
-                <tr key={pkg.id} className="border-t hover:bg-gray-50">
-                  <td className="px-6 py-4 font-medium">{pkg.name}</td>
+                <tr key={pkg._id} className="border-t hover:bg-gray-50">
+                  <td className="px-6 py-4 font-medium">{pkg.title}</td>
                   <td className="px-6 py-4 text-center">{pkg.duration}</td>
-                  <td className="px-6 py-4 text-center">{pkg.speed}</td>
+                  <td className="px-6 py-4 text-center max-w-xs truncate">{pkg.description}</td>
                   <td className="px-6 py-4 text-center font-semibold">
-                    ${pkg.price}
-                  </td>
-                  <td className="px-6 py-4 text-center">
-                    <span
-                      className={`px-3 py-1 rounded-full text-xs font-semibold ${statusStyle(
-                        pkg.status
-                      )}`}
-                    >
-                      {pkg.status}
-                    </span>
+                    Rs. {pkg.price}
                   </td>
                   <td className="px-6 py-4 text-center flex justify-center gap-3">
                     <button
