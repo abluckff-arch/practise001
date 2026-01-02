@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import Header from "../component/header";
 import Footer from "../component/Footer";
+import api from "../api/axios";
 
 export default function Packages() {
   const navigate = useNavigate();
@@ -19,8 +20,8 @@ export default function Packages() {
   useEffect(() => {
     const fetchPackages = async () => {
       try {
-        const res = await axios.get(
-          "http://localhost:5000/api/v1/users/packages"
+        const res = await api.get(
+          "/api/v1/users/packages"
         );
 
         const allPackages = res.data.data;

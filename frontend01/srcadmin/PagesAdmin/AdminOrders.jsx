@@ -3,6 +3,7 @@ import { Plus, Pencil, Trash2, X } from "lucide-react";
 import AdminSidebar from "../ComponentAdmin/AdminSidebar";
 import axios from "axios";
 import toast from "react-hot-toast";
+import api from "../../src/api/axios";
 
 export default function InternetSubscriptions() {
   const [orders, setOrders] = useState([]);
@@ -31,7 +32,7 @@ export default function InternetSubscriptions() {
         const auth = JSON.parse(localStorage.getItem("adminAuth"));
         const token = auth?.accessToken || auth?.data?.accessToken;
 
-        const response = await axios.get("http://localhost:5000/api/v1/users/getbookings", {
+        const response = await api.get("/api/v1/users/getbookings", {
           headers: { Authorization: `Bearer ${token}` },
         });
         setOrders(response.data.data);
@@ -76,7 +77,7 @@ export default function InternetSubscriptions() {
       const auth = JSON.parse(localStorage.getItem("adminAuth"));
       const token = auth?.accessToken || auth?.data?.accessToken;
 
-      await axios.put(`http://localhost:5000/api/v1/users/bookings/${editingOrder._id}`, 
+      await api.put(`/api/v1/users/bookings/${editingOrder._id}`, 
         { status: newStatus },
         { headers: { Authorization: `Bearer ${token}` } }
       );

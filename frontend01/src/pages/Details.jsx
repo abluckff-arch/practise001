@@ -3,6 +3,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { ArrowLeft, Check, CreditCard, MapPin, Phone, User, Wifi } from "lucide-react";
 import toast from "react-hot-toast";
+import api from "../api/axios";
 
 const Details = () => {
   const location = useLocation();
@@ -53,7 +54,7 @@ const Details = () => {
         ...formData
       };
 
-      await axios.post("http://localhost:5000/api/v1/users/bookings", payload);
+      await api.post("/api/v1/users/bookings", payload);
       toast.success("Booking placed successfully!");
       navigate("/thankyou");
     } catch (error) {

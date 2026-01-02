@@ -3,6 +3,7 @@ import axios from "axios";
 import { IndianRupee, ShoppingCart, Users, Package } from "lucide-react";
 import AdminSidebar from "../ComponentAdmin/AdminSidebar";
 import DashboardCard from "../ComponentAdmin/DashBoardCard";
+import api from "../../src/api/axios";
 
 export default function AdminDashboard() {
   const [stats, setStats] = useState({
@@ -21,8 +22,8 @@ export default function AdminDashboard() {
         const config = { headers: { Authorization: `Bearer ${token}` } };
 
         const [ordersRes, productsRes] = await Promise.all([
-          axios.get("http://localhost:5000/api/v1/users/getbookings", config),
-          axios.get("http://localhost:5000/api/v1/users/packages", config),
+          api.get("/api/v1/users/getbookings", config),
+          api.get("/api/v1/users/packages", config),
         ]);
 
         const ordersData = ordersRes.data.data;

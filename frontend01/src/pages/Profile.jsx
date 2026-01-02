@@ -8,9 +8,10 @@ import {
   Eye,
   EyeOff,
 } from "lucide-react";
+import api from "../api/axios";
 
 //const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+//const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 const Profile = () => {
   const [user, setUser] = useState(null);
@@ -28,8 +29,8 @@ const Profile = () => {
   useEffect(() => {
     const fetchProfile = async () => {
       try {
-        const { data } = await axios.get(
-          `${API_BASE_URL}/api/v1/users/getuser`,
+        const { data } = await api.get(
+          "/api/v1/users/getuser",
           { withCredentials: true }
         );
 

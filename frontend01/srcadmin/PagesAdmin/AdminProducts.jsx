@@ -4,6 +4,8 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import AdminSidebar from "../ComponentAdmin/AdminSidebar";
 import toast from "react-hot-toast";
+import api from "../../src/api/axios";
+
 
 export default function InternetPackages() {
   const [packages, setPackages] = useState([]);
@@ -28,7 +30,7 @@ export default function InternetPackages() {
   useEffect(() => {
     const fetchPackages = async () => {
       try {
-        const response = await axios.get("http://localhost:5000/api/v1/users/packages");
+        const response = await api.get("/api/v1/users/packages");
         setPackages(response.data.data);
       } catch (error) {
         console.error("Error fetching packages:", error);
@@ -51,7 +53,7 @@ export default function InternetPackages() {
       const auth = JSON.parse(localStorage.getItem("adminAuth"));
       const token = auth?.accessToken || auth?.data?.accessToken;
 
-      await axios.delete(`http://localhost:5000/api/v1/users/products/${id}`, {
+      await api.delete(`/api/v1/users/products/${id}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
 
@@ -63,8 +65,8 @@ export default function InternetPackages() {
     }
   };
 
-  const handleEdit = (id) => {
-    navigate(`/editpackage/${id}`);
+  const handleEdit = (pkg) => {
+    navigate(`/editpackage/${pkg._id}`, { state: { packageData: pkg } });
   };
 
   return (
@@ -141,7 +143,7 @@ export default function InternetPackages() {
                   </td>
                   <td className="px-6 py-4 text-center flex justify-center gap-3">
                     <button
-                      onClick={() => handleEdit(pkg._id)}
+                      onClick={() => handleEdit(pkg)}
                       disabled={!isOnline}
                       className={
                         isOnline
