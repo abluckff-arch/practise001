@@ -3,7 +3,7 @@ import axios from "axios";
 import { IndianRupee, ShoppingCart, Users, Package } from "lucide-react";
 import AdminSidebar from "../ComponentAdmin/AdminSidebar";
 import DashboardCard from "../ComponentAdmin/DashBoardCard";
-import api from "../../src/api/axios";
+import api from "../../src/api/api";
 
 export default function AdminDashboard() {
   const [stats, setStats] = useState({
@@ -17,13 +17,9 @@ export default function AdminDashboard() {
   useEffect(() => {
     const fetchStats = async () => {
       try {
-        const auth = JSON.parse(localStorage.getItem("adminAuth"));
-        const token = auth?.accessToken || auth?.data?.accessToken;
-        const config = { headers: { Authorization: `Bearer ${token}` } };
-
         const [ordersRes, productsRes] = await Promise.all([
-          api.get("/api/v1/users/getbookings", config),
-          api.get("/api/v1/users/packages", config),
+          api.get("/api/v1/users/getbookings"),
+          api.get("/api/v1/users/packages"),
         ]);
 
         const ordersData = ordersRes.data.data;
@@ -46,6 +42,9 @@ export default function AdminDashboard() {
         });
       } catch (error) {
         console.error("Failed to fetch dashboard stats:", error);
+        if (error.response?.status === 401) {
+          window.location.href = "/";
+        }
       } finally {
         setLoading(false);
       }

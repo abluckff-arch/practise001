@@ -3,7 +3,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { ArrowLeft, Check, CreditCard, MapPin, Phone, User, Wifi } from "lucide-react";
 import toast from "react-hot-toast";
-import api from "../api/axios";
+import api from "../api/api";
 
 const Details = () => {
   const location = useLocation();

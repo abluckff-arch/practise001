@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import AdminSidebar from "../ComponentAdmin/AdminSidebar";
 import toast from "react-hot-toast";
-import api from "../../src/api/axios";
+import api from "../../src/api/api";
 
 
 export default function InternetPackages() {
@@ -34,6 +34,9 @@ export default function InternetPackages() {
         setPackages(response.data.data);
       } catch (error) {
         console.error("Error fetching packages:", error);
+        if (error.response?.status === 401) {
+          window.location.href = "/";
+        }
       }
     };
 
@@ -50,18 +53,16 @@ export default function InternetPackages() {
     if (!window.confirm("Are you sure you want to delete this package?")) return;
 
     try {
-      const auth = JSON.parse(localStorage.getItem("adminAuth"));
-      const token = auth?.accessToken || auth?.data?.accessToken;
-
-      await api.delete(`/api/v1/users/products/${id}`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      await api.delete(`/api/v1/users/products/${id}`);
 
       setPackages((prev) => prev.filter((pkg) => pkg._id !== id));
       toast.success("Package deleted successfully");
     } catch (error) {
       console.error("Error deleting package:", error);
       toast.error(error?.response?.data?.message || "Failed to delete package");
+      if (error.response?.status === 401) {
+        window.location.href = "/";
+      }
     }
   };
 

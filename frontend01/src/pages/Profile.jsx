@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
 import {
   User,
   Shield,
@@ -8,10 +7,8 @@ import {
   Eye,
   EyeOff,
 } from "lucide-react";
-import api from "../api/axios";
+import api from "../api/api";
 
-//const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
-//const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 const Profile = () => {
   const [user, setUser] = useState(null);
@@ -38,7 +35,7 @@ const Profile = () => {
         setUser(profile);
       } catch (err) {
         if (err.response?.status === 401) {
-          window.location.href = "/login";
+          window.location.href = "/";
         }
       } finally {
         setLoading(false);
@@ -66,10 +63,9 @@ const Profile = () => {
     }
 
     try {
-      await axios.put(
-        `${API_BASE_URL}/api/v1/users/change-password`,
-        { currentPassword, newPassword },
-        { withCredentials: true }
+      await api.put(
+        `/api/v1/users/change-password`,
+        { currentPassword, newPassword }
       );
 
       alert("Password updated successfully");
@@ -179,8 +175,8 @@ const Profile = () => {
         <div className="mt-10 text-right">
           <button
             onClick={async () => {
-              await axios.post(
-                `${API_BASE_URL}/api/v1/users/logout`,
+              await api.post(
+                `/api/v1/users/logout`,
                 {},
                 { withCredentials: true }
               );

@@ -3,7 +3,7 @@ import { Plus, Pencil, Trash2, X } from "lucide-react";
 import AdminSidebar from "../ComponentAdmin/AdminSidebar";
 import axios from "axios";
 import toast from "react-hot-toast";
-import api from "../../src/api/axios";
+import api from "../../src/api/api";
 
 export default function InternetSubscriptions() {
   const [orders, setOrders] = useState([]);
@@ -29,15 +29,13 @@ export default function InternetSubscriptions() {
   useEffect(() => {
     const fetchOrders = async () => {
       try {
-        const auth = JSON.parse(localStorage.getItem("adminAuth"));
-        const token = auth?.accessToken || auth?.data?.accessToken;
-
-        const response = await api.get("/api/v1/users/getbookings", {
-          headers: { Authorization: `Bearer ${token}` },
-        });
+        const response = await api.get("/api/v1/users/getbookings");
         setOrders(response.data.data);
       } catch (error) {
         console.error("Error fetching orders:", error);
+        if (error.response?.status === 401) {
+          window.location.href = "/";
+        }
       }
     };
 
@@ -74,12 +72,8 @@ export default function InternetSubscriptions() {
 
   const handleUpdateStatus = async () => {
     try {
-      const auth = JSON.parse(localStorage.getItem("adminAuth"));
-      const token = auth?.accessToken || auth?.data?.accessToken;
-
       await api.put(`/api/v1/users/bookings/${editingOrder._id}`, 
-        { status: newStatus },
-        { headers: { Authorization: `Bearer ${token}` } }
+        { status: newStatus }
       );
 
       setOrders(orders.map((order) => 
@@ -91,6 +85,9 @@ export default function InternetSubscriptions() {
     } catch (error) {
       console.error("Error updating status:", error);
       toast.error("Failed to update status");
+      if (error.response?.status === 401) {
+        window.location.href = "/";
+      }
     }
   };
 

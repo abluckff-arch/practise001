@@ -34,10 +34,10 @@ router.route("/products/:id").put(
     ]),
     authMiddleware, editUpload);
 router.route("/bookings").post(createBooking);
-router.route("/getbookings").get(getBookings);
-router.route("/bookings/:id").delete(deleteBooking);
-router.route("/bookings/:id").get(getBookingById);
-router.route("/bookings/:id").put(updateBooking);
+router.route("/getbookings").get(authMiddleware, getBookings);
+router.route("/bookings/:id").delete(authMiddleware, deleteBooking);
+router.route("/bookings/:id").get(authMiddleware, getBookingById);
+router.route("/bookings/:id").put(authMiddleware, updateBooking);
 router.route("/packages").get(getpackages);
 
 

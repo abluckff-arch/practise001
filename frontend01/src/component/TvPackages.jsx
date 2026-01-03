@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import Header from "./header";
 import Footer from "./footer";
-import api from "../api/axios";
+import api from "../api/api";
 
 export default function TvPackages() {
   const navigate = useNavigate();

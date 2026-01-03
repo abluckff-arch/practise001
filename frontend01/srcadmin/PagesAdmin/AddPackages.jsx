@@ -14,7 +14,7 @@ import {
   Tv,
 } from "lucide-react";
 import AdminSidebar from "../ComponentAdmin/AdminSidebar";
-import api from "../../src/api/axios";
+import api from "../../src/api/api";
 
 const AddPackages = () => {
   const { id } = useParams();
@@ -66,6 +66,9 @@ const AddPackages = () => {
       } catch (err) {
         console.error("Error fetching package details:", err);
         toast.error("Failed to load package details");
+        if (err.response?.status === 401) {
+          window.location.href = "/";
+        }
       }
     };
 
@@ -126,6 +129,9 @@ const AddPackages = () => {
       }
     } catch (err) {
       toast.error(err?.response?.data?.message || "Failed to save package");
+      if (err.response?.status === 401) {
+        window.location.href = "/";
+      }
     } finally {
       setLoading(false);
     }
