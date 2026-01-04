@@ -1,5 +1,6 @@
 import { useState } from "react";
 import AdminSidebar from "../ComponentAdmin/AdminSidebar";
+import toast from "react-hot-toast";
 
 export default function Settings() {
   const [settings, setSettings] = useState({
@@ -19,7 +20,7 @@ export default function Settings() {
 
   const handleSave = () => {
     console.log("Saved Settings:", settings);
-    alert("Settings saved successfully!");
+    toast.success("Settings saved successfully!");
     // Replace with API call
   };
 

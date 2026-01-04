@@ -16,23 +16,25 @@ router.route("/change-password").post(authMiddleware, adminChangepassword);
 //router.route("/change-username").put(authMiddleware, adminChangeUsername);
 
 router.route("/upload").post(
+    authMiddleware,
     upload.fields([
         {
             name: "images",
             maxCount: 5
         }
     ]),
-    authMiddleware,adminupload
+    adminupload
 );
 router.route("/products/:id").delete(authMiddleware, deleteUpload);
 router.route("/products/:id").put(
+    authMiddleware,
     upload.fields([
         {
             name: "images",
             maxCount: 5
         }
     ]),
-    authMiddleware, editUpload);
+    editUpload);
 router.route("/bookings").post(createBooking);
 router.route("/getbookings").get(authMiddleware, getBookings);
 router.route("/bookings/:id").delete(authMiddleware, deleteBooking);

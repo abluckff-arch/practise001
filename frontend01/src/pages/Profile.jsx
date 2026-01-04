@@ -8,6 +8,7 @@ import {
   EyeOff,
 } from "lucide-react";
 import api from "../api/api";
+import toast from "react-hot-toast";
 
 
 const Profile = () => {
@@ -55,11 +56,11 @@ const Profile = () => {
     const { currentPassword, newPassword, confirmPassword } = passwordData;
 
     if (!currentPassword || !newPassword || !confirmPassword) {
-      return alert("All password fields are required");
+      return toast.error("All password fields are required");
     }
 
     if (newPassword !== confirmPassword) {
-      return alert("New passwords do not match");
+      return toast.error("New passwords do not match");
     }
 
     try {
@@ -68,14 +69,14 @@ const Profile = () => {
         { currentPassword, newPassword }
       );
 
-      alert("Password updated successfully");
+      toast.success("Password updated successfully");
       setPasswordData({
         currentPassword: "",
         newPassword: "",
         confirmPassword: "",
       });
     } catch (err) {
-      alert(err.response?.data?.message || "Password change failed");
+      toast.error(err.response?.data?.message || "Password change failed");
     }
   };
 

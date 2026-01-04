@@ -23,7 +23,6 @@ api.interceptors.response.use(
                 return api(originalRequest);
             } catch (refreshError) {
                 // If refresh fails, the user must login again
-                alert("You are unauthorized");
                 window.location.href = "/login";
             }
         }

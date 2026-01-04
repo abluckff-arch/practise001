@@ -1,10 +1,12 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { loginUser } from "../api/authService";
+import toast from "react-hot-toast";
 
 function Login() {
     const [form, setForm] = useState({ username: "", password: "" });
     const [message, setMessage] = useState("");
+    const [isSuccess, setIsSuccess] = useState(false);
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
 
@@ -12,17 +14,27 @@ function Login() {
         e.preventDefault();
         setLoading(true);
         setMessage("");
+        setIsSuccess(false);
 
         try {
             const res = await loginUser(form);
 
             if (res.data.success) {
                 localStorage.setItem("adminAuth", JSON.stringify(res.data));
+                toast.success("Login successful!");
+                setIsSuccess(true);
                 setMessage("Login successful! Redirecting...");
                 setTimeout(() => navigate("/dashboard"), 1500);
+            } else {
+                toast.error(res.data.message || "Invalid credentials");
+                setIsSuccess(false);
+                setMessage(res.data.message || "Invalid credentials");
             }
         } catch (err) {
-            setMessage(err.message || "Login failed");
+            console.error("Login failed:", err);
+            toast.error(err.response?.data?.message || "Invalid credentials");
+            setIsSuccess(false);
+            setMessage(err.response?.data?.message || "Invalid credentials");
         } finally {
             setLoading(false);
         }
@@ -32,11 +44,12 @@ function Login() {
         <div className="min-h-screen flex items-center justify-center bg-white px-4">
             <form onSubmit={handleSubmit} className="bg-white rounded-2xl shadow-xl p-8 w-full max-w-md text-center">
 
-                <h2 className="text-2xl font-bold text-indigo-700 mb-2">Welcome Back 👋</h2>
-                <p className="text-gray-500 mb-6">Log in to continue</p>
+              <h2 className="text-2xl font-bold text-indigo-700 mb-2">Login</h2>
 
                 {message && (
-                    <div className="mb-4 p-3 rounded-lg bg-red-100 text-red-700 border border-red-300">
+                    <div className={`mb-4 p-3 rounded-lg border ${
+                        isSuccess ? "bg-green-100 text-green-700 border-green-300" : "bg-red-100 text-red-700 border-red-300"
+                    }`}>
                         {message}
                     </div>
                 )}
