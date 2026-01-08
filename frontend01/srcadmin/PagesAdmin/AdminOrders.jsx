@@ -140,6 +140,7 @@ export default function InternetSubscriptions() {
                 <th className="px-6 py-4 text-left">Full Name</th>
                 <th className="px-6 py-4 text-left">Phone</th>
                 <th className="px-6 py-4 text-center">Connection</th>
+                <th className="px-6 py-4 text-center">Location</th>
                 <th className="px-6 py-4 text-center">Package</th>
                 <th className="px-6 py-4 text-center">Duration</th>
                 <th className="px-6 py-4 text-center">Price</th>
@@ -172,6 +173,10 @@ export default function InternetSubscriptions() {
 
                   <td className="px-6 py-4 text-center">
                     {item.connectionType}
+                  </td>
+
+                  <td className="px-6 py-4 text-center">
+                    {item.municipality && item.tole ? `${item.municipality}, ${item.tole}` : item.municipality || item.tole || "-"}
                   </td>
 
                   <td className="px-6 py-4 text-center">
@@ -272,6 +277,10 @@ export default function InternetSubscriptions() {
               </p>
 
               <p className="text-sm">
+                📍 {item.municipality && item.tole ? `${item.municipality}, ${item.tole}` : item.municipality || item.tole || "-"}
+              </p>
+
+              <p className="text-sm">
                 {item.plan?.title} ({item.plan?.duration})
               </p>
 
@@ -338,7 +347,7 @@ export default function InternetSubscriptions() {
                     onChange={(e) => setNewStatus(e.target.value)}
                     className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 outline-none"
                   >
-                    {["Pending", "Confirmed", "Active", "Installed", "Cancelled"].map(s => (
+                    {["Pending", "Confirmed", "Installed", "Cancelled"].map(s => (
                       <option key={s} value={s}>{s}</option>
                     ))}
                   </select>
@@ -352,19 +361,6 @@ export default function InternetSubscriptions() {
           </div>
         )}
 
-        {/* Connection Status */}
-        <p className="text-xs text-gray-500">
-          Connection:{" "}
-          <span
-            className={
-              isOnline
-                ? "text-green-600 font-semibold"
-                : "text-red-600 font-semibold"
-            }
-          >
-            {isOnline ? "Online" : "Offline"}
-          </span>
-        </p>
       </div>
     </div>
   );
