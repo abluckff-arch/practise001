@@ -1,8 +1,8 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { loginUser } from "../api/authService";
+import { useNavigate, Link } from "react-router-dom";
+import { loginUser } from "../apiAdmin/authService";
 import toast from "react-hot-toast";
-import { useAuth } from "../../srcadmin/context/AuthContext";
+import { useAuth } from "../context/AuthContext";
 
 function Login() {
     const [form, setForm] = useState({ username: "", password: "" });
@@ -19,7 +19,7 @@ function Login() {
 
             if (res.data.success) {
                 localStorage.setItem("adminAuth", JSON.stringify(res.data));
-                setUser(res.data.data.user);
+                setUser(res.data.data?.user || res.data.user);
                 navigate("/dashboard");
             } else {
                 toast.error(res.data.message || "Invalid credentials");
@@ -72,7 +72,7 @@ function Login() {
 
                 <p className="mt-4 text-sm text-gray-600">
                     Don’t have an account?
-                    <a href="/register" className="text-indigo-600 hover:underline"> Register</a>
+                    <Link to="/register" className="text-indigo-600 hover:underline"> Register</Link>
                 </p>
             </form>
         </div>

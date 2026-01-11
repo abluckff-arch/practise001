@@ -20,7 +20,7 @@ export default function InternetSubscriptions() {
   useEffect(() => {
     const fetchOrders = async () => {
       try {
-        const response = await api.get("/api/v1/users/getbookings");
+        const response = await api.get("/api/v1/users/getbookings", { withCredentials: true });
         setOrders(response.data.data);
       } catch (error) {
         console.error("Error fetching orders:", error);
@@ -70,7 +70,7 @@ export default function InternetSubscriptions() {
         note: reasons.trim()
       };
 
-      await api.put(`/api/v1/users/bookings/${editingOrder._id}`, payload);
+      await api.put(`/api/v1/users/bookings/${editingOrder._id}`, payload, { withCredentials: true });
 
       setOrders((prev) =>
         prev.map((order) =>

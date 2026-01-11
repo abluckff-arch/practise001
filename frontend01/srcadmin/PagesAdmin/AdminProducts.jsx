@@ -34,7 +34,7 @@ export default function InternetPackages() {
   const handleDelete = async (id) => {
     if (!window.confirm("Are you sure you want to delete this package?")) return;
     try {
-      await api.delete(`/api/v1/users/products/${id}`);
+      await api.delete(`/api/v1/users/products/${id}`, { withCredentials: true });
       setPackages((prev) => prev.filter((pkg) => pkg._id !== id));
       toast.success("Package deleted successfully");
     } catch (error) {

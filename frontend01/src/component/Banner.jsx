@@ -74,7 +74,7 @@ export default function BannerCarousel() {
                 loading="lazy"
               />
               {/* White gradient overlay */}
-              <div className="absolute top-0 right-0 w-full md:w-1/2 h-full  from-white/60 via-white/30 to-transparent"></div>
+              <div className="absolute top-0 right-0 w-full md:w-1/2 h-full bg-gradient-to-l from-white/60 via-white/30 to-transparent"></div>
             </div>
 
             {/* Text */}

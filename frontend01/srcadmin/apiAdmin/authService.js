@@ -1,5 +1,5 @@
 // src/api/authService.js
-import api from "./api";
+import api from "../../src/api/api";
 
 // Login → { username, password }
 export const loginUser = (data) => api.post("/api/v1/users/login", data);

@@ -1,14 +1,16 @@
 import React, { useState } from "react";
-import { registerUser } from "../api/authService";
+import { useNavigate, Link } from "react-router-dom";
+import toast from "react-hot-toast";
+import { registerUser } from "../apiAdmin/authService";
 
 const Register = () => {
+    const navigate = useNavigate();
     const [formData, setFormData] = useState({
         fullname: "",
         username: "",
         password: "",
     });
 
-    const [message, setMessage] = useState("");
     const [loading, setLoading] = useState(false);
 
     const handleChange = (e) => {
@@ -18,14 +20,17 @@ const Register = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         setLoading(true);
-        setMessage("");
 
         try {
             const res = await registerUser(formData);
-            setMessage("User registered successfully!");
-            console.log(res.data);
+            if (res.data.success) {
+                toast.success("User registered successfully! Please login.");
+                navigate("/login");
+            } else {
+                toast.error(res.data.message || "Registration failed");
+            }
         } catch (err) {
-            setMessage(err.message || "Error registering user.");
+            toast.error(err.response?.data?.message || "Error registering user.");
         } finally {
             setLoading(false);
         }
@@ -83,11 +88,10 @@ const Register = () => {
                     {loading ? "Registering..." : "Register"}
                 </button>
 
-                {message && (
-                    <p className="mt-4 text-center text-gray-700 font-medium">
-                        {message}
-                    </p>
-                )}
+                <p className="mt-4 text-sm text-gray-600 text-center">
+                    Already have an account?{" "}
+                    <Link to="/login" className="text-indigo-600 hover:underline">Login</Link>
+                </p>
 
             </form>
         </div>

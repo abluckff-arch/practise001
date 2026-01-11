@@ -54,7 +54,7 @@ const AddPackages = () => {
 
     const fetchPackage = async () => {
       try {
-        const { data } = await api.get(`/api/v1/users/products/${id}`);
+        const { data } = await api.get(`/api/v1/users/products/${id}`, { withCredentials: true });
         console.log(data);
         const pkg = data.data;
         setFormData({
@@ -115,11 +115,17 @@ const AddPackages = () => {
       existingImages.forEach((img) => data.append("existingImages", img._id)); // backend handles deletion if not included
 
       if (id) {
-        await api.put(`/api/v1/users/products/${id}`, data);
+        await api.put(`/api/v1/users/products/${id}`, data, {
+          withCredentials: true,
+          headers: { "Content-Type": "multipart/form-data" },
+        });
         toast.success("Package updated successfully!");
         navigate("/products");
       } else {
-        await api.post("/api/v1/users/upload", data);
+        await api.post("/api/v1/users/upload", data, {
+          withCredentials: true,
+          headers: { "Content-Type": "multipart/form-data" },
+        });
         toast.success("Package created successfully!");
         setFormData({
           title: "",

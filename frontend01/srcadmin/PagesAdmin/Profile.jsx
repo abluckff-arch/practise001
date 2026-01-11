@@ -1,10 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { Camera, Lock, Eye, EyeOff, CalendarDays, BadgeCheck } from "lucide-react";
-import api from "../api/api";
+import { useNavigate } from "react-router-dom";
+
 import toast from "react-hot-toast";
-import AdminSidebar from "../../srcadmin/ComponentAdmin/AdminSidebar";
+import AdminSidebar from "../ComponentAdmin/AdminSidebar";
+import api from "../../src/api/api";
 
 const ProfileAlt = () => {
+  const navigate = useNavigate();
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
@@ -28,7 +31,7 @@ const ProfileAlt = () => {
         });
         setUser(data.data || data.user);
       } catch (err) {
-        if (err.response?.status === 401) window.location.href = "/login";
+        if (err.response?.status === 401) navigate("/login");
       } finally {
         setLoading(false);
       }
@@ -142,7 +145,7 @@ const ProfileAlt = () => {
               <button
                 onClick={async () => {
                   await api.post("/api/v1/users/logout", {}, { withCredentials: true });
-                  window.location.href = "/login";
+                  navigate("/login");
                 }}
                 className="bg-red-500 hover:bg-red-600 text-white px-8 py-3 rounded-xl transition"
               >

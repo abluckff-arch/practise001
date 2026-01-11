@@ -11,7 +11,7 @@ export default function Customers() {
   useEffect(() => {
     const fetchAdmins = async () => {
       try {
-        const res = await api.get("/api/v1/users/alladmins");
+        const res = await api.get("/api/v1/users/alladmins", { withCredentials: true });
         setAdmins(res.data.data);
       } catch (error) {
         toast.error("Failed to fetch admins");
@@ -26,7 +26,7 @@ export default function Customers() {
 
 const handleDeactivate = async (id) => {
   try {
-    const { data } = await api.put(`/api/v1/users/admins/${id}/deactivate`);
+    const { data } = await api.put(`/api/v1/users/admins/${id}/deactivate`, {}, { withCredentials: true });
     toast.success(data?.message || "Status updated");
 
     setAdmins((prev) =>
@@ -44,7 +44,7 @@ const handleDelete = async (id) => {
   if (!window.confirm("Are you sure you want to delete this admin?")) return;
 
   try {
-    const { data } = await api.delete(`/api/v1/users/admins/${id}`);
+    const { data } = await api.delete(`/api/v1/users/admins/${id}`, { withCredentials: true });
     toast.success(data?.message || "Admin deleted successfully");
 
     setAdmins((prev) => prev.filter((admin) => admin._id !== id));

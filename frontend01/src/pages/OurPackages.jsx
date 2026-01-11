@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import Header from "../component/header";
-import Footer from "../component/footer";
+import Header from "../component/Header";
+import Footer from "../component/Footer";
 import api from "../api/api";
 
 export default function Packages() {
@@ -124,7 +124,7 @@ export default function Packages() {
     <div className="flex flex-col min-h-screen bg-gray-100">
       <Header />
 
-      <main className="flex-1 px-4 sm:px-6 lg:px-12 py-14 space-y-20 pt-30">
+      <main className="flex-1 px-4 sm:px-6 lg:px-12 py-14 space-y-20 pt-32">
         {loading ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
             {[...Array(8)].map((_, i) => (

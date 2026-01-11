@@ -1,6 +1,6 @@
 import { CheckCircle, PhoneCall } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import Header from "../component/header";
+import Header from "../component/Header";
 
 export default function ThankYou() {
   const navigate = useNavigate();
